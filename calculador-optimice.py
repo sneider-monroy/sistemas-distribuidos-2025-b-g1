@@ -1,103 +1,62 @@
-# calculadora_historial.py
-# Calculadora básica con historial y pruebas
+# calculadora.py - HU-1
+# Versión inicial: operaciones básicas y historial en memoria
 
-# ======= LÓGICA DE LA CALCULADORA =======
-class Calculadora:
-    def __init__(self):
-        self.historial = []
+def mostrar_menu():
+    print("\n=== CALCULADORA BÁSICA ===")
+    print("1. Sumar")
+    print("2. Restar")
+    print("3. Multiplicar")
+    print("4. Dividir")
+    print("5. Ver historial")
+    print("6. Salir")
 
-    def registrar_operacion(self, operacion, resultado):
-        self.historial.append(f"{operacion} = {resultado}")
+def sumar(a, b): return a + b
+def restar(a, b): return a - b
+def multiplicar(a, b): return a * b
+def dividir(a, b): return "Error: División por cero" if b == 0 else a / b
 
-    def sumar(self, a, b):
-        resultado = a + b
-        self.registrar_operacion(f"{a} + {b}", resultado)
-        return resultado
-
-    def restar(self, a, b):
-        resultado = a - b
-        self.registrar_operacion(f"{a} - {b}", resultado)
-        return resultado
-
-    def multiplicar(self, a, b):
-        resultado = a * b
-        self.registrar_operacion(f"{a} * {b}", resultado)
-        return resultado
-
-    def dividir(self, a, b):
-        if b == 0:
-            raise ValueError("No se puede dividir entre cero.")
-        resultado = a / b
-        self.registrar_operacion(f"{a} / {b}", resultado)
-        return resultado
-
-    def mostrar_historial(self):
-        return "\n".join(self.historial) if self.historial else "Historial vacío."
-
-
-# ======= MENÚ INTERACTIVO =======
-def menu():
-    calc = Calculadora()
-
+def main():
+    historial = []
     while True:
-        print("\n--- Calculadora con Historial ---")
-        print("1. Sumar")
-        print("2. Restar")
-        print("3. Multiplicar")
-        print("4. Dividir")
-        print("5. Ver historial")
-        print("6. Salir")
-
-        opcion = input("Selecciona una opción: ")
+        mostrar_menu()
+        opcion = input("Opción: ")
 
         if opcion in ["1", "2", "3", "4"]:
             try:
-                num1 = float(input("Ingrese el primer número: "))
-                num2 = float(input("Ingrese el segundo número: "))
+                num1 = float(input("Primer número: "))
+                num2 = float(input("Segundo número: "))
+            except ValueError:
+                print("⚠ Ingresa números válidos.")
+                continue
 
-                if opcion == "1":
-                    print("Resultado:", calc.sumar(num1, num2))
-                elif opcion == "2":
-                    print("Resultado:", calc.restar(num1, num2))
-                elif opcion == "3":
-                    print("Resultado:", calc.multiplicar(num1, num2))
-                elif opcion == "4":
-                    print("Resultado:", calc.dividir(num1, num2))
+            if opcion == "1":
+                resultado = sumar(num1, num2)
+                operacion = f"{num1} + {num2} = {resultado}"
+            elif opcion == "2":
+                resultado = restar(num1, num2)
+                operacion = f"{num1} - {num2} = {resultado}"
+            elif opcion == "3":
+                resultado = multiplicar(num1, num2)
+                operacion = f"{num1} * {num2} = {resultado}"
+            else:
+                resultado = dividir(num1, num2)
+                operacion = f"{num1} / {num2} = {resultado}"
 
-            except ValueError as e:
-                print("Error:", e)
+            print("Resultado:", resultado)
+            historial.append(operacion)
 
         elif opcion == "5":
-            print("\n--- Historial de operaciones ---")
-            print(calc.mostrar_historial())
-
+            print("\n=== HISTORIAL ===")
+            if historial:
+                for i, h in enumerate(historial, start=1):
+                    print(f"{i}. {h}")
+            else:
+                print("No hay operaciones registradas.")
         elif opcion == "6":
-            print("Saliendo de la calculadora...")
+            print("Adiós 👋")
             break
         else:
-            print("Opción no válida. Intente nuevamente.")
-
-
-# ======= PRUEBAS AUTOMÁTICAS =======
-def pruebas():
-    calc = Calculadora()
-
-    assert calc.sumar(2, 3) == 5
-    assert calc.restar(5, 3) == 2
-    assert calc.multiplicar(4, 3) == 12
-    assert calc.dividir(10, 2) == 5
-
-    try:
-        calc.dividir(5, 0)
-    except ValueError as e:
-        assert str(e) == "No se puede dividir entre cero."
-
-    print("✅ Todas las pruebas pasaron correctamente.")
-
+            print("Opción no válida")
 
 if __name__ == "__main__":
-    # Ejecutar pruebas
-    pruebas()
-
-    # Iniciar menú
-    menu()
+    main()
